@@ -11,20 +11,28 @@ const AddOrder = () => {
   const [newOrderTitle, setNewOrderTitle] = useState("");
   const [newOrderContent, setNewOrderContent] = useState("");
   const [newOrderDate, setNewOrderDate] = useState("");
-  const [newOrderTimeRanges, setNewOrderTime] = useState("");
+  const [newOrderTime, setNewOrderTime] = useState("");
+
+  const checkIfAllFieldsAreNotEmpty = () => {};
 
   const createOrder = async (e) => {
     e.preventDefault();
-    console.log(newOrderTitle);
-    console.log(newOrderContent);
-    console.log(newOrderDate);
-    console.log(typeof newOrderDate);
+
+    // ---- calculating time ----
+    let hours = newOrderTime.substring(0, newOrderTime.indexOf(":"));
+    let minutes = newOrderTime.substring(newOrderTime.indexOf(":") + 1);
+    hours = hours * 3600;
+    minutes = minutes * 60;
+
+    await checkIfAllFieldsAreNotEmpty();
     const orderDate = new Date(newOrderDate);
-    console.log(typeof orderDate);
     var seconds = orderDate.getTime() / 1000;
     seconds = seconds - 7200;
-    console.log(seconds);
 
+    // ---- adding time to the date value ----
+    seconds = seconds + hours + minutes;
+
+    // ---- sending new record to database ----
     await addDoc(ordersCollectionRef, {
       name: newOrderTitle,
       description: newOrderContent,
@@ -33,6 +41,7 @@ const AddOrder = () => {
       workerId: "",
     });
   };
+
   const buttonHandler = () => {};
   return (
     <div>
@@ -56,6 +65,24 @@ const AddOrder = () => {
           onChange={(e) => setNewOrderDate(e.target.value)}
         />
 
+        <select
+          className="time-select"
+          onChange={async (e) => {
+            setNewOrderTime(e.target.value);
+          }}
+        >
+          <option>Choose hour</option>
+          <option>8:00</option>
+          <option>9:00</option>
+          <option>10:00</option>
+          <option>11:00</option>
+          <option>12:00</option>
+          <option>13:00</option>
+          <option>14:00</option>
+          <option>15:00</option>
+          <option>16:00</option>
+          <option>17:00</option>
+        </select>
         <Form.Group className="mb-3" controlId="formControlTextarea">
           <Form.Label>Description</Form.Label>
           <Form.Control
