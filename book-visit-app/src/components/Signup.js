@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
-import { Form, Button, Card, Alert } from "react-bootstrap";
-
+import { Form, Button, Alert } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
 import { Link, useHistory } from "react-router-dom";
 export default function Signup() {
   const [error, setError] = useState("");
@@ -30,7 +30,7 @@ export default function Signup() {
     <div>
       <Card>
         <Card.Body>
-          <h2 className="text-center mb-4">Sign Up</h2>
+          <h2 className="text-center mb-4">Log In</h2>
           {/* {currentUser && currentUser.email} */}
           {error && <Alert variant="danger"> {error} </Alert>}
           <Form onSubmit={handleSubmit}>
@@ -46,13 +46,13 @@ export default function Signup() {
               <Form.Label>Password Confirmation</Form.Label>
               <Form.Control type="password" ref={passwordConfirmRef} required />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading} className="w-100 mt-4" type="submit">
               Sign Up
             </Button>
           </Form>
         </Card.Body>
       </Card>
-      <div className="w-100 text-center mt-2">Log In</div>
+      {/* <div className="w-100 text-center mt-2">Log In</div> */}
     </div>
   );
 }
