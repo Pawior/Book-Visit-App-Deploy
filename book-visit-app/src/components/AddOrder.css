@@ -1,0 +1,15 @@
+.addOrder {
+  position: relative;
+  left: calc(50% - 250px);
+  width: 500px;
+}
+
+.page-title {
+  color: royalblue;
+}
+
+.time-select {
+  width: 500px;
+  border: 1px solid royalblue;
+  border-radius: 4px;
+}

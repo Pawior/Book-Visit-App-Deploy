@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Orders from "./Orders";
 import SignupContainer from "./SignupContainter";
+import AddOrder from "./AddOrder";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./Home";
@@ -13,6 +14,7 @@ function App() {
         <Route exact path="/" component={Home}></Route>
         <Route path="/signup" component={SignupContainer}></Route>
         <Route path="/orders" component={Orders}></Route>
+        <Route path="/addorder" component={AddOrder}></Route>
       </Switch>
     </Router>
   );

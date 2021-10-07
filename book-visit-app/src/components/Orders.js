@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
+import Order from "./elements/Order";
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const ordersCollectionRef = collection(db, "orders");
@@ -16,7 +17,22 @@ const Orders = () => {
   useLayoutEffect(() => {
     console.log(orders);
   });
-  return <div>To jest strona orders</div>;
+
+  const orderList = orders.map((order) => {
+    return (
+      <Order
+        title={order.name}
+        content={order.description}
+        clientId={order.clientId}
+        workerId={order.workerId}
+        date={order.date}
+        id={order.id}
+        key={order.id}
+      />
+    );
+  });
+
+  return <div>{orderList}</div>;
 };
 
 export default Orders;
