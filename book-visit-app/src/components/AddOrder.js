@@ -17,6 +17,7 @@ const AddOrder = () => {
 
   const createOrder = async (e) => {
     e.preventDefault();
+    await checkIfAllFieldsAreNotEmpty();
 
     // ---- calculating time ----
     let hours = newOrderTime.substring(0, newOrderTime.indexOf(":"));
@@ -24,7 +25,6 @@ const AddOrder = () => {
     hours = hours * 3600;
     minutes = minutes * 60;
 
-    await checkIfAllFieldsAreNotEmpty();
     const orderDate = new Date(newOrderDate);
     var seconds = orderDate.getTime() / 1000;
     seconds = seconds - 7200;
