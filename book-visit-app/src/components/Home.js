@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { UserContext } from "../contexts/UserContext";
 import { Redirect, useHistory } from "react-router-dom";
-// import io from 'socket.io-client'
-// let socket;
+import io from 'socket.io-client'
+let socket;
 
 export default function Home() {
   const { user, setUser } = useContext(UserContext);
@@ -33,14 +33,14 @@ export default function Home() {
   );
 
   // let user;
-  // const ENDPT = 'localhost:5000'
-  // useEffect(() => {
-  //   socket = io(ENDPT);
-  //   return () => {
-  //     socket.emit('disconnect');
-  //     socket.off();
-  //   }
-  // }, [ENDPT]);
+  const ENDPT = 'localhost:5000'
+  useEffect(() => {
+    socket = io(ENDPT);
+    return () => {
+      socket.emit('disconnect');
+      socket.off();
+    }
+  }, [ENDPT]);
 
   const redirectToOrders = () => {
     history.push({
@@ -62,9 +62,9 @@ export default function Home() {
       state: { workerId: user.id },
     });
   };
-  // const sendEmail = () => {
-  //   socket.emit('send-email', user);
-  // }
+  const sendEmail = () => {
+    socket.emit('send-email', user.email);
+  }
   if (!user) {
     return <Redirect to="/login" />;
   } else if (user.userType && user.userType == "client") {
@@ -80,6 +80,7 @@ export default function Home() {
       <div>
         <button onClick={redirectToOrders}>Orders</button>
         <button onClick={redirectToMyOrders}>My Orders</button>
+        <button onClick={sendEmail}>Send Email</button>
       </div>
     );
   }
