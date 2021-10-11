@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useLayoutEffect, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
-import { Redirect } from "react-router-dom";
+import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { Redirect, useHistory } from "react-router-dom";
 import Order from "./elements/Order";
 
 const MyOrders = (props) => {
   const { user, setUser } = useContext(UserContext);
   const [orders, setOrders] = useState([]);
+  const history = useHistory();
   const ordersCollectionRef = collection(db, "orders");
   useEffect(() => {
     const getOrders = async () => {
@@ -18,9 +19,15 @@ const MyOrders = (props) => {
     console.clear();
   }, []);
 
-  useLayoutEffect(() => {
-    console.log(orders);
-  });
+  const updateOrderWorker = async (user, orderId) => {
+    console.log("Przesyłanei funkcji " + user.id);
+    console.log(user);
+    console.log(orderId);
+    const orderDoc = doc(db, "orders", orderId);
+    const newFields = { workerId: "" };
+    await updateDoc(orderDoc, newFields);
+    // window.location.reload(false);
+  };
 
   if (!user) {
     return <Redirect to="/login" />;
@@ -38,15 +45,22 @@ const MyOrders = (props) => {
             clientId={order.clientId}
             workerId={order.workerId}
             date={order.date}
+            user={user}
             id={order.id}
             key={order.id}
+            updateFunction={updateOrderWorker}
           />
         );
       }
     });
     console.log(orderListLen);
     return orderListLen ? (
-      <div>{orderList}</div>
+      <div>
+        <button onClick={() => history.push({ pathname: "/orders" })}>
+          All orders
+        </button>
+        {orderList}
+      </div>
     ) : (
       <div>All orders are done!</div>
     );

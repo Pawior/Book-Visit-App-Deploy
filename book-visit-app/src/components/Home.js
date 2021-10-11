@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { UserContext } from "../contexts/UserContext";
 import { Redirect, useHistory } from "react-router-dom";
-import io from 'socket.io-client'
+import io from "socket.io-client";
 let socket;
 
 export default function Home() {
@@ -11,8 +11,12 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
   useEffect(
     function () {
-      console.log(user);
-
+      if (user) {
+        window.localStorage.setItem("logged", true);
+        window.localStorage.setItem("user", { email: user.email, id: user.id });
+        const userLogged = window.localStorage.getItem("user");
+        console.log(user.id);
+      }
       // const userMenu = () => {
       //   if (user.userType == "client") {
       //     return (
@@ -33,13 +37,13 @@ export default function Home() {
   );
 
   // let user;
-  const ENDPT = 'localhost:5000'
+  const ENDPT = "localhost:5000";
   useEffect(() => {
     socket = io(ENDPT);
     return () => {
-      socket.emit('disconnect');
+      socket.emit("disconnect");
       socket.off();
-    }
+    };
   }, [ENDPT]);
 
   const redirectToOrders = () => {
@@ -63,8 +67,8 @@ export default function Home() {
     });
   };
   const sendEmail = () => {
-    socket.emit('send-email', user.email);
-  }
+    socket.emit("send-email", user.email);
+  };
   if (!user) {
     return <Redirect to="/login" />;
   } else if (user.userType && user.userType == "client") {

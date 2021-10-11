@@ -29,7 +29,6 @@ export default function Login() {
       where("email", "==", emailRef.current.value),
       where("password", "==", passwordRef.current.value)
     );
-
     let querySnapshot = await getDocs(q);
     console.log(querySnapshot);
     querySnapshot.forEach(async (doc) => {
@@ -42,12 +41,12 @@ export default function Login() {
     console.log(email, password);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (isMounted.current) {
       console.log("dziala");
       console.log(email);
       console.log(password);
-      setUser({
+      await setUser({
         id: userId,
         email: email,
         password: password,
