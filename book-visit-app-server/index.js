@@ -25,10 +25,10 @@ io.on('connection', (socket) => {
     console.log('a user connected')
 
     socket.on('send-email', (userInfo) => {
-        console.log('emai ' + userInfo)
+        console.log('emai ' + userInfo.email)
         let mailOptions = {
             from: "Book Visit App",
-            to: 'dawid.book.app@gmail.com',
+            to: 'jasiu.book.app@gmail.com',
             subject: 'My first Email!',
             text: "This is my first email. I am so excited"
         }
