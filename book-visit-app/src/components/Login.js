@@ -5,19 +5,23 @@ import { Redirect } from "react-router-dom";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { UserContext } from "../contexts/UserContext";
+import { useHistory } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
 
 export default function Login() {
   const { user, setUser } = useContext(UserContext);
   const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [active, setActive] = useState(true);
+  const [attemps, setAttemps] = useState(3);
+  const [error, setError] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const isMounted = useRef(false);
   const emailRef = useRef();
   const passwordRef = useRef();
   const userType = useRef();
-
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
 
   const logUserIn = async (e) => {
@@ -34,15 +38,17 @@ export default function Login() {
     querySnapshot.forEach(async (doc) => {
       console.log(doc.id, " => ", doc.data());
       await setUserId(doc.id);
+      await setAttemps(doc.data().loginAttemps);
+      await setActive(doc.data().active);
       await setEmail(doc.data().email);
       await setPassword(doc.data().password);
     });
     await setRefresh(true);
-    console.log(email, password);
+    await setError(true);
   };
 
   useEffect(async () => {
-    if (isMounted.current) {
+    if (isMounted.current && active == true) {
       console.log("dziala");
       console.log(email);
       console.log(password);
@@ -55,17 +61,46 @@ export default function Login() {
     } else {
       isMounted.current = true;
     }
+    console.log(email, password, active, attemps);
   }, [password]);
 
-  if (user) {
+  if (user && active == true) {
     return <Redirect to="/" />;
+  } else if (active == false) {
+    return (
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>This account is not active</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>
+            Click "send activation email" and click activation link on our email
+            or go back to login page.
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="primary">Send activation email</Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              history.push({ pathname: "/login" });
+              window.location.reload();
+            }}
+          >
+            Go back to login
+          </Button>
+        </Modal.Footer>
+      </Modal.Dialog>
+    );
   } else {
     return (
       <div>
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Log In</h2>
-            {error && <Alert variant="danger"> {error} </Alert>}
+
             <Form>
               <h3>Log as</h3>
               <select ref={userType}>
@@ -82,6 +117,7 @@ export default function Login() {
                 <Form.Control type="password" ref={passwordRef} required />
               </Form.Group>
               <p className="login-info"></p>
+              {error ? <div> Wrong password or email </div> : null}
               <Button
                 disabled={loading}
                 className="w-100 mt-4"

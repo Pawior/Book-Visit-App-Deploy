@@ -13,9 +13,18 @@ export default function Home() {
     function () {
       if (user) {
         window.localStorage.setItem("logged", true);
-        window.localStorage.setItem("user", { email: user.email, id: user.id });
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email: user.email,
+            id: user.id,
+            userType: user.userType,
+          })
+        );
+        const userL = JSON.parse(localStorage.getItem("user"));
         const userLogged = window.localStorage.getItem("user");
-        console.log(user.id);
+        console.log(userL);
+        console.log(user);
       }
       // const userMenu = () => {
       //   if (user.userType == "client") {

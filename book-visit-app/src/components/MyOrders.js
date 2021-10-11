@@ -8,8 +8,12 @@ import Order from "./elements/Order";
 const MyOrders = (props) => {
   const { user, setUser } = useContext(UserContext);
   const [orders, setOrders] = useState([]);
+  const userLogged = localStorage.getItem("logged");
   const history = useHistory();
   const ordersCollectionRef = collection(db, "orders");
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("user")));
+  }, []);
   useEffect(() => {
     const getOrders = async () => {
       const data = await getDocs(ordersCollectionRef);
@@ -20,22 +24,17 @@ const MyOrders = (props) => {
   }, []);
 
   const updateOrderWorker = async (user, orderId) => {
-    console.log("Przesyłanei funkcji " + user.id);
-    console.log(user);
-    console.log(orderId);
     const orderDoc = doc(db, "orders", orderId);
     const newFields = { workerId: "" };
     await updateDoc(orderDoc, newFields);
-    // window.location.reload(false);
+    window.location.reload();
   };
 
-  if (!user) {
+  if (!userLogged) {
     return <Redirect to="/login" />;
   } else {
     let orderListLen = 0;
     const orderList = orders.map((order) => {
-      console.log(props.location.state.workerId);
-      console.log(order.workerId);
       if (order.workerId === props.location.state.workerId) {
         orderListLen++;
         return (
@@ -53,7 +52,6 @@ const MyOrders = (props) => {
         );
       }
     });
-    console.log(orderListLen);
     return orderListLen ? (
       <div>
         <button onClick={() => history.push({ pathname: "/orders" })}>
@@ -62,7 +60,12 @@ const MyOrders = (props) => {
         {orderList}
       </div>
     ) : (
-      <div>All orders are done!</div>
+      <div>
+        <button onClick={() => history.push({ pathname: "/orders" })}>
+          All orders
+        </button>
+        <h2>All orders are done!</h2>
+      </div>
     );
     // return <div>{orderList}</div>;
   }

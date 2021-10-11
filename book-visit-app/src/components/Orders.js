@@ -8,11 +8,13 @@ import Button from "react-bootstrap/Button";
 
 const Orders = () => {
   const { user, setUser } = useContext(UserContext);
-  const userLogged = window.localStorage.getItem("logged");
+  const userLogged = localStorage.getItem("logged");
   const [orders, setOrders] = useState([]);
-  // const [refresh, setRefresh] = useState(false);
   const history = useHistory();
   const ordersCollectionRef = collection(db, "orders");
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("user")));
+  }, []);
   useEffect(() => {
     const getOrders = async () => {
       const data = await getDocs(ordersCollectionRef);
@@ -27,7 +29,7 @@ const Orders = () => {
     const orderDoc = doc(db, "orders", orderId);
     const newFields = { workerId: user.id };
     await updateDoc(orderDoc, newFields);
-    // window.location.reload(false);
+    window.location.reload(false);
   };
   if (!userLogged) {
     return <Redirect to="/login" />;
