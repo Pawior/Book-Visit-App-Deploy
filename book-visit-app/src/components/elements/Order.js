@@ -26,6 +26,21 @@ const Order = (props) => {
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>{props.content}</Card.Text>
         <Card.Text>{fullDate}</Card.Text>
+        {props.type == "allOrders" ? (
+          <Button
+            variant="success"
+            onClick={() => props.updateFunction(props.user, props.id)}
+          >
+            Accept order
+          </Button>
+        ) : (
+          <Button
+            variant="danger"
+            onClick={() => props.updateFunction(props.user, props.id)}
+          >
+            Decline
+          </Button>
+        )}
       </Card.Body>
     </Card>
   );

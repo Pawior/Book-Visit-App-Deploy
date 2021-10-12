@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { UserContext } from "../contexts/UserContext";
 import { Redirect, useHistory } from "react-router-dom";
-import io from 'socket.io-client'
+import io from "socket.io-client";
 let socket;
 
 export default function Home() {
@@ -11,35 +11,33 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
   useEffect(
     function () {
-      console.log(user);
-
-      // const userMenu = () => {
-      //   if (user.userType == "client") {
-      //     return (
-      //       <div>
-      //         <button onClick={redirectToAddOrder}></button>
-      //       </div>
-      //     );
-      //   } else {
-      //     return (
-      //       <div>
-      //         <button onClick={redirectToOrders}></button>
-      //       </div>
-      //     );
-      //   }
-      // };
+      if (user) {
+        window.localStorage.setItem("logged", true);
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email: user.email,
+            id: user.id,
+            userType: user.userType,
+          })
+        );
+        const userL = JSON.parse(localStorage.getItem("user"));
+        const userLogged = window.localStorage.getItem("user");
+        console.log(userL);
+        console.log(user);
+      }
     },
     [user]
   );
 
   // let user;
-  const ENDPT = 'localhost:5000'
+  const ENDPT = "localhost:5000";
   useEffect(() => {
     socket = io(ENDPT);
     return () => {
-      socket.emit('disconnect');
+      socket.emit("disconnect");
       socket.off();
-    }
+    };
   }, [ENDPT]);
 
   const redirectToOrders = () => {
@@ -63,7 +61,7 @@ export default function Home() {
     });
   };
   const sendEmail = () => {
-    socket.emit('send-email', user.email);
+    socket.emit('send-email', user);
   }
   if (!user) {
     return <Redirect to="/login" />;

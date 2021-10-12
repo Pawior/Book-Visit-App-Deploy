@@ -4,6 +4,8 @@ const http = require('http').createServer(app)
 const socketio = require('socket.io')
 const io = socketio(http)
 const nodemailer = require('nodemailer');
+
+const dotenv = require('dotenv').config()
 const { getMaxListeners } = require('process');
 
 const transporter = nodemailer.createTransport({
@@ -12,8 +14,8 @@ const transporter = nodemailer.createTransport({
     secure: false,
     requireTLS: true,
     auth: {
-        user: 'dawid.book.app@gmail.com',
-        pass: 'zaq1@WSXQwEr!'
+        user: process.env.NODE_GMAIL_SENDER_MAIL,
+        pass: process.env.NODE_GMAIL_SENDER_PASSWORD
 
     }
 })
@@ -25,10 +27,10 @@ io.on('connection', (socket) => {
     console.log('a user connected')
 
     socket.on('send-email', (userInfo) => {
-        console.log('emai ' + userInfo)
+        console.log('emai ' + userInfo.email)
         let mailOptions = {
             from: "Book Visit App",
-            to: 'dawid.book.app@gmail.com',
+            to: 'jasiu.book.app@gmail.com',
             subject: 'My first Email!',
             text: "This is my first email. I am so excited"
         }
