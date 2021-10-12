@@ -3,7 +3,14 @@ import { Form, Button, Alert } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import { Redirect } from "react-router-dom";
 import { db } from "../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 import { UserContext } from "../contexts/UserContext";
 import { useHistory } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
@@ -28,6 +35,7 @@ export default function Login() {
     e.preventDefault();
     console.log(userType.current.value);
     document.querySelector(".login-info").innerHTML = "";
+    setAttemps(attemps - 1);
     let q = query(
       collection(db, `${userType.current.value}s`),
       where("email", "==", emailRef.current.value),
@@ -35,20 +43,87 @@ export default function Login() {
     );
     let querySnapshot = await getDocs(q);
     console.log(querySnapshot);
-    querySnapshot.forEach(async (doc) => {
-      console.log(doc.id, " => ", doc.data());
-      await setUserId(doc.id);
-      await setAttemps(doc.data().loginAttemps);
-      await setActive(doc.data().active);
-      await setEmail(doc.data().email);
-      await setPassword(doc.data().password);
+    querySnapshot.forEach(async (info) => {
+      console.log(info.id, " => ", info.data());
+      await setUserId(info.id);
+      await setAttemps(3);
+      await setActive(true);
+      await setEmail(info.data().email);
+
+      const userDoc = doc(db, `${userType.current.value}s`, info.id);
+      const newFields = { loginAttemps: 3, active: true };
+      await updateDoc(userDoc, newFields);
+      await setPassword(info.data().password);
     });
     await setRefresh(true);
     await setError(true);
   };
 
+  useEffect(() => {
+    console.log("active:", active, "attemps:", attemps);
+  });
+
+  const refreshUserLoginAttemps = () => {
+    console.log(emailRef.current.value);
+    const users = ["workers", "clients"];
+    users.forEach(async (userT) => {
+      let q3 = query(
+        collection(db, userT),
+        where("email", "==", emailRef.current.value)
+      );
+      let querySnapshot3 = await getDocs(q3);
+      querySnapshot3.forEach(async (info) => {
+        // setAttemps(info.data().loginAttemps);
+        const userDoc = doc(db, userT, info.id);
+        console.log(info.data().loginAttemps);
+        await setAttemps(info.data().loginAttemps);
+        await setActive(info.data().active);
+        console.log(info.id, " => ", info.data());
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (isMounted.current) {
+      console.log("local attemps", attemps);
+      //---- updating user login attemps ----
+      const users = ["workers", "clients"];
+      users.forEach(async (userT) => {
+        // console.log(userT);
+        let q2 = query(
+          collection(db, userT),
+          where("email", "==", emailRef.current.value)
+        );
+        let querySnapshot2 = await getDocs(q2);
+        querySnapshot2.forEach(async (info) => {
+          // setAttemps(info.data().loginAttemps);
+          const userDoc = doc(db, userT, info.id);
+          console.log(info.data().loginAttemps);
+          // if (info.data().loginAttemps === 1) {
+          //   const newFieldsActive = { active: false };
+          //   await updateDoc(userDoc, newFieldsActive);
+          // } else {
+          const newFields = { loginAttemps: attemps };
+          await updateDoc(userDoc, newFields);
+          // }
+          if (info.data().loginAttemps <= 0) {
+            const newFieldsActive = { active: false };
+            await updateDoc(userDoc, newFieldsActive);
+            const newFields = { loginAttemps: attemps };
+            await updateDoc(userDoc, newFields);
+          }
+          console.log(info.id, " => ", info.data());
+        });
+      });
+    }
+  }, [attemps]);
+
+  // useEffect(() => {
+  //   setAttemps(attemps - 1);
+  // }, [])
   useEffect(async () => {
     if (isMounted.current && active == true) {
+      // sprytne żeby useEffect się nie wykonywał na starcie
       console.log("dziala");
       console.log(email);
       console.log(password);
@@ -58,6 +133,7 @@ export default function Login() {
         password: password,
         userType: userType.current.value,
       });
+      setAttemps(3);
     } else {
       isMounted.current = true;
     }
@@ -110,19 +186,33 @@ export default function Login() {
 
               <Form.Group id="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" ref={emailRef} required />
+                <Form.Control
+                  type="email"
+                  ref={emailRef}
+                  required
+                  onBlur={() => refreshUserLoginAttemps()}
+                />
               </Form.Group>
               <Form.Group id="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" ref={passwordRef} required />
+                <Form.Control
+                  type="password"
+                  ref={passwordRef}
+                  required
+                  onBlur={() => refreshUserLoginAttemps()}
+                />
               </Form.Group>
               <p className="login-info"></p>
-              {error ? <div> Wrong password or email </div> : null}
+              {error ? (
+                <div> Wrong password or email! Left attemps: {attemps}</div>
+              ) : null}
               <Button
                 disabled={loading}
                 className="w-100 mt-4"
                 type="submit"
                 onClick={logUserIn}
+                required
+                onBlur={() => refreshUserLoginAttemps()}
               >
                 Login
               </Button>
