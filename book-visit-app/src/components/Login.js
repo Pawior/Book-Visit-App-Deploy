@@ -127,8 +127,6 @@ export default function Login() {
   // }, [])
   const sendActivationEmail = async (email) => {
     console.log(email);
-    // let data = new FormData();
-    // data.append("json", JSON.stringify({ email: email }));
     const body = { email: email };
     console.log(body);
 
