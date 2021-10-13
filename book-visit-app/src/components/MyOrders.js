@@ -50,9 +50,6 @@ const MyOrders = (props) => {
     let orderListLen = 0;
     const orderList = orders.map((order) => {
       if (order.workerId === props.location.state.workerId) {
-        console.log(ordersStartDate);
-        console.log(order.date);
-        console.log(ordersEndDate);
         if (ordersStartDate) {
           if (
             order.date >= ordersStartDate / 1000 &&
