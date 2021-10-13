@@ -47,16 +47,26 @@ app.post('/send-email', async (req, res) => {
     if (!user) {
         res.sendStatus(401)
     }
-    const payload = user.email
+    const payload = { email: user.email }
     // console.log('payload', payload)
     // console.log(user.email)
-    const token = jwt.sign(payload, ACCESS_TOKEN)
+    const token = jwt.sign(payload, ACCESS_TOKEN, { expiresIn: '3m' })
 
     let mailOptions = {
         from: "Book Visit App",
         to: user.email,
         subject: 'My first Email!',
-        html: `<a href="http://localhost:5000/active?token=${token}&email=${user.email}">Your activation link</a>`
+        html: `
+        <div style="background-color: royalblue; padding: 15px; border-radius: 5px;">
+            <h3 style="color: white;">Hi! We are Book Visit App team</h3>
+            <p style="color: white">We are sending your account activation link: </p>
+            <button style="border: 1px solid darkblue; background-color: white; height: 40px; width: 100px; border-radius: 5px">
+                <a style="text-decoration: none; color: black; font-weight: bold;"
+                href="http://localhost:5000/active?token=${token}&email=${user.email}">
+                Your activation link
+                </a>
+            </button>
+        </div>`
     }
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
