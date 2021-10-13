@@ -30,9 +30,11 @@ export default function Login() {
   const userType = useRef();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const [confirmedEmail, setConfirmedEmail] = useState();
 
   const logUserIn = async (e) => {
     e.preventDefault();
+
     console.log(userType.current.value);
     document.querySelector(".login-info").innerHTML = "";
     setAttemps(attemps - 1);
@@ -61,10 +63,12 @@ export default function Login() {
 
   useEffect(() => {
     console.log("active:", active, "attemps:", attemps);
+    console.log(confirmedEmail);
   });
 
   const refreshUserLoginAttemps = () => {
     console.log(emailRef.current.value);
+    setConfirmedEmail(emailRef.current.value);
     const users = ["workers", "clients"];
     users.forEach(async (userT) => {
       let q3 = query(
@@ -122,15 +126,24 @@ export default function Login() {
   //   setAttemps(attemps - 1);
   // }, [])
   const sendActivationEmail = async (email) => {
-    const response = await fetch("http://localhost:5000/send-email", {
+    console.log(email);
+    // let data = new FormData();
+    // data.append("json", JSON.stringify({ email: email }));
+    const body = { email: email };
+    console.log(body);
+
+    const data = fetch("http://localhost:5000/send-email", {
       method: "POST",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
-        email: email,
-      },
-    });
+      body: JSON.stringify(body),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.log(err));
+
     history.push({ pathname: "/login" });
   };
 
@@ -172,7 +185,7 @@ export default function Login() {
         <Modal.Footer>
           <Button
             variant="primary"
-            onClick={() => sendActivationEmail(emailRef.current.value)}
+            onClick={() => sendActivationEmail(confirmedEmail)}
           >
             Send activation email
           </Button>
