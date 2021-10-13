@@ -48,15 +48,19 @@ export default function Login() {
   };
 
   const sendActivationEmail = async (email) => {
-    const response = await fetch("http://localhost:5000/send-email", {
-      method: 'POST',
-      headers: {
-        'Content-Type': "application/json"
-      },
-      body: {
-        "email": email
-      }
-    })
+    try {
+      const response = await fetch("http://localhost:5000/send-email", {
+        method: 'POST',
+        headers: {
+          'Content-Type': "application/json"
+        },
+        body: {
+          "email": email
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
     history.push({ pathname: "/login" })
 
   }
