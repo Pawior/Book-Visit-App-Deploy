@@ -121,6 +121,19 @@ export default function Login() {
   // useEffect(() => {
   //   setAttemps(attemps - 1);
   // }, [])
+  const sendActivationEmail = async (email) => {
+    const response = await fetch("http://localhost:5000/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {
+        email: email,
+      },
+    });
+    history.push({ pathname: "/login" });
+  };
+
   useEffect(async () => {
     if (isMounted.current && active == true) {
       // sprytne żeby useEffect się nie wykonywał na starcie
@@ -157,7 +170,12 @@ export default function Login() {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="primary">Send activation email</Button>
+          <Button
+            variant="primary"
+            onClick={() => sendActivationEmail(emailRef.current.value)}
+          >
+            Send activation email
+          </Button>
           <Button
             variant="danger"
             onClick={() => {
