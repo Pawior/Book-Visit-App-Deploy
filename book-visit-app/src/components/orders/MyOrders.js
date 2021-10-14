@@ -1,12 +1,6 @@
-<<<<<<< HEAD:book-visit-app/src/components/orders/MyOrders.js
 import React, { useState, useEffect, useLayoutEffect, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { db } from "../../firebase";
-=======
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../contexts/UserContext";
-import { db } from "../firebase";
->>>>>>> e2aa5b9c0cb9bc35f9cc3afa319c99f9a0b046fc:book-visit-app/src/components/MyOrders.js
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { Redirect, useHistory } from "react-router-dom";
 import Order from "./elements/Order";
