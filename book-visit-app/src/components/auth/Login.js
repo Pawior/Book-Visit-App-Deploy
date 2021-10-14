@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import { Redirect } from "react-router-dom";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import {
   collection,
   query,
@@ -11,7 +11,7 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import { UserContext } from "../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 import { useHistory } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 

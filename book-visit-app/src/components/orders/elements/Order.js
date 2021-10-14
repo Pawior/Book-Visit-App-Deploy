@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import { useHistory } from 'react-router-dom'
+
 const Order = (props) => {
   const [fullDate, setFullDate] = useState("");
+  const history = useHistory()
   useEffect(() => {
     let fDate;
     if (typeof props.date == "number") {
@@ -14,6 +17,21 @@ const Order = (props) => {
     }
   }, []);
 
+
+  const redirectToOrderInfo = (orderInfo) => {
+    console.log(orderInfo)
+    history.push({
+      pathname: `/order/${orderInfo.id}`,
+      state: {
+        id: orderInfo.id,
+        date: orderInfo.date.id,
+        title: orderInfo.title,
+        clientId: orderInfo.clientId,
+        workerId: orderInfo.workerId,
+        content: orderInfo.content
+      }
+    })
+  }
   return (
     <Card
       className="mt-4 m-2"
@@ -24,8 +42,9 @@ const Order = (props) => {
       <Card.Header>Zlecenie</Card.Header>
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
-        <Card.Text>{props.content}</Card.Text>
+        {/* <Card.Text>{props.content}</Card.Text> */}
         <Card.Text>{fullDate}</Card.Text>
+
         {props.type == "allOrders" ? (
           <Button
             variant="success"
@@ -33,6 +52,7 @@ const Order = (props) => {
           >
             Accept order
           </Button>
+
         ) : (
           <Button
             variant="danger"
@@ -40,7 +60,9 @@ const Order = (props) => {
           >
             Decline
           </Button>
+
         )}
+        <Button className="m-2" variant="info" onClick={() => redirectToOrderInfo(props)}>Order info</Button>
       </Card.Body>
     </Card>
   );

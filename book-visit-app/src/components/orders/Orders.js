@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useLayoutEffect, useContext } from "react";
-import { UserContext } from "../contexts/UserContext";
-import { db } from "../firebase";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
+import { db } from "../../firebase";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { Redirect, useHistory } from "react-router-dom";
 import Order from "./elements/Order";
+import Button from "react-bootstrap/Button";
 
-const MyOrders = (props) => {
+const Orders = () => {
   const { user, setUser } = useContext(UserContext);
-  const [orders, setOrders] = useState([]);
   const userLogged = localStorage.getItem("logged");
+  const [orders, setOrders] = useState([]);
   const history = useHistory();
   const ordersCollectionRef = collection(db, "orders");
   useEffect(() => {
@@ -20,23 +21,21 @@ const MyOrders = (props) => {
       setOrders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getOrders();
-    console.clear();
   }, []);
-
   const updateOrderWorker = async (user, orderId) => {
+    console.log("Przesyłanei funkcji " + user.id);
+    console.log(user);
+    console.log(orderId);
     const orderDoc = doc(db, "orders", orderId);
-    const newFields = { workerId: "" };
+    const newFields = { workerId: user.id };
     await updateDoc(orderDoc, newFields);
-    window.location.reload();
+    window.location.reload(false);
   };
-
   if (!userLogged) {
     return <Redirect to="/login" />;
   } else {
-    let orderListLen = 0;
     const orderList = orders.map((order) => {
-      if (order.workerId === props.location.state.workerId) {
-        orderListLen++;
+      if (order.workerId == "") {
         return (
           <Order
             title={order.name}
@@ -44,31 +43,32 @@ const MyOrders = (props) => {
             clientId={order.clientId}
             workerId={order.workerId}
             date={order.date}
+            updateFunction={updateOrderWorker}
             user={user}
+            type={"allOrders"}
             id={order.id}
             key={order.id}
-            updateFunction={updateOrderWorker}
-          />
+          ></Order>
         );
       }
     });
-    return orderListLen ? (
+
+    return (
       <div>
-        <button onClick={() => history.push({ pathname: "/orders" })}>
-          All orders
+        <button
+          onClick={() =>
+            history.push({
+              pathname: "/myorders/" + user.id,
+              state: { workerId: user.id },
+            })
+          }
+        >
+          MyOrders
         </button>
         {orderList}
       </div>
-    ) : (
-      <div>
-        <button onClick={() => history.push({ pathname: "/orders" })}>
-          All orders
-        </button>
-        <h2>All orders are done!</h2>
-      </div>
     );
-    // return <div>{orderList}</div>;
   }
 };
 
-export default MyOrders;
+export default Orders;

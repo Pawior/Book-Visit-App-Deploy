@@ -5,19 +5,6 @@ const cors = require('cors')
 
 const dotenv = require('dotenv').config()
 
-// ---- getting local views ----
-const activationEmailT = require('./views/activationEmail')
-
-// ---- initialize token ----
-const ACCESS_TOKEN = process.env.JWT_TOKEN
-
-// ---- initialize nodemailer transporter ----
-const { transporter } = require('./initialize/nodemailer')
-
-
-// ---- getting firestore collections ----
-const { Orders, Workers, Clients } = require('./initialize/firebase');
-
 // ---- basic app and port configuration ----
 const PORT = process.env.NODE_SERVER_PORT
 app.use(express.static(__dirname + '/public'))

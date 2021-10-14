@@ -3,9 +3,9 @@ import "./AddOrder.css";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Redirect } from "react-router-dom";
-import { UserContext } from "../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 const AddOrder = () => {
@@ -76,7 +76,7 @@ const AddOrder = () => {
     }
   };
 
-  const buttonHandler = () => {};
+  const buttonHandler = () => { };
   if (user) {
     return (
       <div>

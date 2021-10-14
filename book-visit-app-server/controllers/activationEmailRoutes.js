@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer');
 const url = require('url')
+const fs = require('fs')
+const path = require('path')
 
 const activationEmailT = require('../views/activationEmail')
 const { Orders, Workers, Clients } = require('../initialize/firebase');
@@ -9,7 +11,8 @@ const { Orders, Workers, Clients } = require('../initialize/firebase');
 const ACCESS_TOKEN = process.env.JWT_TOKEN
 
 // ---- declaring nodemailer transporter ----
-const { transporter } = require('../initialize/nodemailer')
+const { transporter } = require('../initialize/nodemailer');
+const { join } = require('path');
 
 // -------- send email route --------
 const sendVerEmail = async (req, res) => {
@@ -59,6 +62,8 @@ const activationFromEmail = (req, res) => {
         const user = list.find(u => u.email === email)
         // console.log(user)
         await Workers.doc(user.id).update({ active: true })
+        res.sendFile(path.join(__dirname + "/../views/accountActivated.html"))
+        // res.sendFile(fs.readFile(__dirname, "..", 'views', 'accountActivated.html'))
         //  ({ ...doc.data(), id: doc.id })
 
     })
