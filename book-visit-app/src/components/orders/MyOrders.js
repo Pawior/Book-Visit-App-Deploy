@@ -63,6 +63,7 @@ const MyOrders = (props) => {
                 clientId={order.clientId}
                 workerId={order.workerId}
                 date={order.date}
+                status={order.status}
                 user={user}
                 id={order.id}
                 key={order.id}
@@ -79,6 +80,7 @@ const MyOrders = (props) => {
               clientId={order.clientId}
               workerId={order.workerId}
               date={order.date}
+              status={order.status}
               user={user}
               id={order.id}
               key={order.id}

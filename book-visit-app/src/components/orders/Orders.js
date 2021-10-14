@@ -39,7 +39,7 @@ const Orders = () => {
   };
 
   const rangePickerCallback = (start, end, label) => {
-    console.log("start", start._d, "end", end, "label", label);
+    // console.log("start", start._d, "end", end, "label", label);
     const startDate = new Date(start._d);
     const endDate = new Date(end._d);
 
@@ -68,6 +68,7 @@ const Orders = () => {
                 clientId={order.clientId}
                 workerId={order.workerId}
                 date={order.date}
+                status={order.status}
                 updateFunction={updateOrderWorker}
                 user={user}
                 type={"allOrders"}
@@ -84,6 +85,7 @@ const Orders = () => {
               clientId={order.clientId}
               workerId={order.workerId}
               date={order.date}
+              status={order.status}
               updateFunction={updateOrderWorker}
               user={user}
               type={"allOrders"}

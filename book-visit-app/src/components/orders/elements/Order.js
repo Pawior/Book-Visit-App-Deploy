@@ -2,11 +2,23 @@ import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useHistory } from 'react-router-dom'
+import Badge from 'react-bootstrap/Badge'
 
 const Order = (props) => {
   const [fullDate, setFullDate] = useState("");
   const history = useHistory()
+  const statusColors = ["orange", "blue", "green"]
+  let statusColor;
+  if (props.status === "pending") {
+    statusColor = statusColors[0]
+  } else if (props.status === "in progress") {
+    statusColor = statusColors[1]
+  } else {
+    statusColor = statusColors[2]
+  }
   useEffect(() => {
+
+
     let fDate;
     if (typeof props.date == "number") {
       fDate = new Date(props.date * 1000).toString().substr(0, 21);
@@ -19,16 +31,16 @@ const Order = (props) => {
 
 
   const redirectToOrderInfo = (orderInfo) => {
-    console.log(orderInfo)
     history.push({
       pathname: `/order/${orderInfo.id}`,
       state: {
         id: orderInfo.id,
-        date: orderInfo.date.id,
+        date: fullDate,
         title: orderInfo.title,
         clientId: orderInfo.clientId,
         workerId: orderInfo.workerId,
-        content: orderInfo.content
+        content: orderInfo.content,
+        status: orderInfo.status
       }
     })
   }
@@ -39,7 +51,9 @@ const Order = (props) => {
       style={{ width: "18rem" }}
       key={props.orderID}
     >
-      <Card.Header>Zlecenie</Card.Header>
+      <Card.Header>Zlecenie
+        <Badge bg="primary" style={{ position: 'absolute', top: '5px', right: '5px', backgroundColor: statusColor, width: "5rem", height: "1.5rem" }} >{props.status}</Badge>
+      </Card.Header>
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         {/* <Card.Text>{props.content}</Card.Text> */}
@@ -63,8 +77,9 @@ const Order = (props) => {
 
         )}
         <Button className="m-2" variant="info" onClick={() => redirectToOrderInfo(props)}>Order info</Button>
+
       </Card.Body>
-    </Card>
+    </Card >
   );
 };
 
