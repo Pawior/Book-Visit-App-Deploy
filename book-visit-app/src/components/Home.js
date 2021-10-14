@@ -61,8 +61,8 @@ export default function Home() {
     });
   };
   const sendEmail = () => {
-    socket.emit('send-email', user);
-  }
+    socket.emit("send-email", user);
+  };
   if (!user) {
     return <Redirect to="/login" />;
   } else if (user.userType && user.userType == "client") {

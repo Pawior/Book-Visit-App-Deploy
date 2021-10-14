@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require("express");
 const app = express();
 const http = require('http').createServer(app)
 const cors = require('cors')
@@ -18,5 +18,5 @@ app.use(emailActRoutes)
 
 // ---- listening ----
 app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`)
-})
+    console.log(`Listening on port ${PORT}`);
+});
