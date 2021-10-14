@@ -44,11 +44,9 @@ const AddOrder = () => {
 
     let isError = await checkIfAllFieldsAreNotEmpty();
     if (isError) {
-      // <<<<<<< HEAD
       const orderDate = new Date(newOrderDate);
       var seconds = orderDate.getTime() / 1000;
       seconds = seconds - 7200;
-      // =======
     } else {
       console.log("success");
       // ---- calculating time ----
@@ -56,7 +54,6 @@ const AddOrder = () => {
       let minutes = newOrderTime.substring(newOrderTime.indexOf(":") + 1);
       hours = hours * 3600;
       minutes = minutes * 60;
-      // >>>>>>> main
 
       const orderDate = new Date(newOrderDate);
       var seconds = orderDate.getTime() / 1000;
@@ -70,7 +67,8 @@ const AddOrder = () => {
         name: newOrderTitle,
         description: newOrderContent,
         date: seconds,
-        clientId: "",
+        status: "pending",
+        clientId: user.id,
         workerId: "",
       });
     }
