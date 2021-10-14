@@ -20,6 +20,7 @@ const { Orders, Workers, Clients } = require('./initialize/firebase');
 
 // ---- basic app and port configuration ----
 const PORT = process.env.NODE_SERVER_PORT
+app.use(express.static(__dirname + '/public'))
 app.use(express.json());
 app.use(cors());
 

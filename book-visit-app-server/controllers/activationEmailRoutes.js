@@ -26,7 +26,12 @@ const sendVerEmail = async (req, res) => {
         from: "Book Visit App",
         to: user.email,
         subject: 'My first Email!',
-        html: activationEmailT(token, user.email)
+        html: activationEmailT(token, user.email),
+        attachments: [{
+            filename: 'logo.png',
+            path: './public/images/logo/logo.png',
+            cid: 'logo@cid'
+        }],
     }
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
