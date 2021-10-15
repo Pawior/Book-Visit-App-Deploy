@@ -6,6 +6,7 @@ import AddOrder from "./orders/AddOrder";
 import MyOrders from "./orders/MyOrders";
 import OrderDetail from './orders/OrderDetail'
 import Page404 from './err/Page404'
+import Navbar from './layout/Navbar'
 import { UserContext } from "../contexts/UserContext";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -16,6 +17,7 @@ function App() {
   return (
     <Router>
       <UserContext.Provider value={{ user, setUser }}>
+        <Navbar />
         <Switch>
           <Route exact path="/" component={Home}></Route>
           <Route path="/login" component={LoginContainer}></Route>

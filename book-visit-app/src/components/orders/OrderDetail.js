@@ -24,7 +24,7 @@ const OrderDetail = (props) => {
     useEffect(async () => {
         const orderDocRef = await doc(db, "orders", informations.id)
         const orderSnap = await getDoc(orderDocRef)
-        console.log(orderSnap.data())
+        // console.log(orderSnap.data())
         setStatus(orderSnap.data().status)
     }, [])
 
