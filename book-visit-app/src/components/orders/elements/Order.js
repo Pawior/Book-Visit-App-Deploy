@@ -7,7 +7,7 @@ import Badge from 'react-bootstrap/Badge'
 const Order = (props) => {
   const [fullDate, setFullDate] = useState("");
   const history = useHistory()
-  const statusColors = ["orange", "blue", "green"]
+  const statusColors = ["orange", "royalblue", "green"]
   let statusColor;
   if (props.status === "pending") {
     statusColor = statusColors[0]

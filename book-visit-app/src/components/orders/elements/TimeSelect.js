@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import { db } from "../../../firebase";
 import { doc, setDoc, collection, updateDoc, getDocs, getDoc } from "firebase/firestore";
@@ -11,6 +11,9 @@ const TimeSelect = (props) => {
     const errorRef = useRef()
     const freeTimeCollectionRef = collection(db, "freeTime")
     const freeTimeDocRef = doc(db, "freeTime", props.workerId)
+    const orderDocRef = doc(db, "orders", props.orderId)
+
+
     let minHour = props.minHour
     minHour = parseInt(minHour.substr(16, 2))
     const options = []
@@ -87,7 +90,9 @@ const TimeSelect = (props) => {
                 } else {
                     errorRef.current.innerHTML = ""
                     console.log('można')
+                    updateDocStatus();
                     setDoc(freeTimeDocRef, data, { merge: true })
+                    window.location.reload() // ---- refreshing page to get actual status ----
                 }
             });
 
@@ -111,6 +116,11 @@ const TimeSelect = (props) => {
         toReturn = await checkAvailability(dbFreeTimeInfo, toReturn, fullDate)
         await sendFreeTimeToDb(toReturn)
 
+    }
+
+    const updateDocStatus = async () => {
+        const newFields = { status: "in progress" }
+        await updateDoc(orderDocRef, newFields)
     }
     return (
         <div>
