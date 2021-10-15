@@ -41,7 +41,7 @@ const OrderDetail = (props) => {
                         {/* <Card.Text>
 
                         </Card.Text> */}
-                        <TimeSelect minHour={informations.date} />
+                        <TimeSelect minHour={informations.date} workerId={informations.workerId} />
                     </Card.Body>
                 </Card>
             </Container>
