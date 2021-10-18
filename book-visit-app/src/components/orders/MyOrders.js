@@ -92,9 +92,6 @@ const MyOrders = (props) => {
     });
     return orderListLen ? (
       <div>
-        <button onClick={() => history.push({ pathname: "/orders" })}>
-          All orders
-        </button>
         <DateRangePicker
           initialSettings={{ startDate: "10/1/2021", endDate: "10/31/2021" }}
           onCallback={rangePickerCallback}
@@ -105,9 +102,6 @@ const MyOrders = (props) => {
       </div>
     ) : (
       <div>
-        <button onClick={() => history.push({ pathname: "/orders" })}>
-          All orders
-        </button>
         <DateRangePicker
           initialSettings={{ startDate: "10/1/2021", endDate: "10/31/2021" }}
           onCallback={rangePickerCallback}

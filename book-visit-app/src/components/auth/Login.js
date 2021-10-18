@@ -35,7 +35,7 @@ export default function Login() {
   const logUserIn = async (e) => {
     e.preventDefault();
 
-    console.log(userType.current.value);
+    // console.log(userType.current.value);
     document.querySelector(".login-info").innerHTML = "";
     setAttemps(attemps - 1);
     let q = query(
@@ -44,9 +44,9 @@ export default function Login() {
       where("password", "==", passwordRef.current.value)
     );
     let querySnapshot = await getDocs(q);
-    console.log(querySnapshot);
+    // console.log(querySnapshot);
     querySnapshot.forEach(async (info) => {
-      console.log(info.id, " => ", info.data());
+      // console.log(info.id, " => ", info.data());
       await setUserId(info.id);
       await setAttemps(3);
       await setActive(true);
@@ -61,13 +61,13 @@ export default function Login() {
     await setError(true);
   };
 
-  useEffect(() => {
-    console.log("active:", active, "attemps:", attemps);
-    console.log(confirmedEmail);
-  });
+  // useEffect(() => {
+  //   // console.log("active:", active, "attemps:", attemps);
+  //   // console.log(confirmedEmail);
+  // });
 
   const refreshUserLoginAttemps = () => {
-    console.log(emailRef.current.value);
+    // console.log(emailRef.current.value);
     setConfirmedEmail(emailRef.current.value);
     const users = ["workers", "clients"];
     users.forEach(async (userT) => {
@@ -79,17 +79,17 @@ export default function Login() {
       querySnapshot3.forEach(async (info) => {
         // setAttemps(info.data().loginAttemps);
         const userDoc = doc(db, userT, info.id);
-        console.log(info.data().loginAttemps);
+        // console.log(info.data().loginAttemps);
         await setAttemps(info.data().loginAttemps);
         await setActive(info.data().active);
-        console.log(info.id, " => ", info.data());
+        // console.log(info.id, " => ", info.data());
       });
     });
   };
 
   useEffect(() => {
     if (isMounted.current) {
-      console.log("local attemps", attemps);
+      // console.log("local attemps", attemps);
       //---- updating user login attemps ----
       const users = ["workers", "clients"];
       users.forEach(async (userT) => {
@@ -102,7 +102,7 @@ export default function Login() {
         querySnapshot2.forEach(async (info) => {
           // setAttemps(info.data().loginAttemps);
           const userDoc = doc(db, userT, info.id);
-          console.log(info.data().loginAttemps);
+          // console.log(info.data().loginAttemps);
           // if (info.data().loginAttemps === 1) {
           //   const newFieldsActive = { active: false };
           //   await updateDoc(userDoc, newFieldsActive);
@@ -116,7 +116,7 @@ export default function Login() {
             const newFields = { loginAttemps: attemps };
             await updateDoc(userDoc, newFields);
           }
-          console.log(info.id, " => ", info.data());
+          // console.log(info.id, " => ", info.data());
         });
       });
     }
@@ -126,9 +126,9 @@ export default function Login() {
   //   setAttemps(attemps - 1);
   // }, [])
   const sendActivationEmail = async (email) => {
-    console.log(email);
+    // console.log(email);
     const body = { email: email };
-    console.log(body);
+    // console.log(body);
 
     const data = fetch("http://localhost:5000/send-email", {
       method: "POST",
@@ -148,9 +148,9 @@ export default function Login() {
   useEffect(async () => {
     if (isMounted.current && active == true) {
       // sprytne żeby useEffect się nie wykonywał na starcie
-      console.log("dziala");
-      console.log(email);
-      console.log(password);
+      // console.log("dziala");
+      // console.log(email);
+      // console.log(password);
       await setUser({
         id: userId,
         email: email,
@@ -161,7 +161,7 @@ export default function Login() {
     } else {
       isMounted.current = true;
     }
-    console.log(email, password, active, attemps);
+    // console.log(email, password, active, attemps);
   }, [password]);
 
   if (user && active == true) {

@@ -99,16 +99,6 @@ const Orders = () => {
 
     return (
       <div>
-        <button
-          onClick={() =>
-            history.push({
-              pathname: "/myorders/" + user.id,
-              state: { workerId: user.id },
-            })
-          }
-        >
-          MyOrders
-        </button>
         <DateRangePicker
           initialSettings={{ startDate: "10/1/2021", endDate: "10/31/2021" }}
           onCallback={rangePickerCallback}
