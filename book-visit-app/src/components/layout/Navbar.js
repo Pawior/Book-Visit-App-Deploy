@@ -6,6 +6,7 @@ import { UserContext } from '../../contexts/UserContext'
 const Navbar = () => {
     const { user, setUser } = useContext(UserContext)
     const history = useHistory()
+    console.log(user)
     if (user) {
         console.log(user)
     }
@@ -22,7 +23,9 @@ const Navbar = () => {
         } else {
             navContent = (
                 <ul>
-                    <li><a href="/addorder"></a></li>
+                    <li><a href="/addorder">Add order</a></li>
+                    <li><a onClick={() => redirectToUserOrders()} href="">My orders</a></li>
+                    <li><a onClick={() => logout()} href="">Logout</a></li>
                 </ul>
             )
         }
@@ -34,6 +37,12 @@ const Navbar = () => {
         history.push({
             pathname: `/myorders/${user.id}`,
             state: { workerId: user.id }
+        })
+    }
+    const redirectToUserOrders = () => {
+        history.push({
+            pathname: `/user-orders/${user.id}`,
+            state: { clientId: user.id }
         })
     }
 

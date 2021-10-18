@@ -5,5 +5,6 @@ const router = Router()
 
 router.post('/send-email', activationEmailRouter.sendVerEmail)
 router.get('/active', activationEmailRouter.activationFromEmail)
+router.post('/confirmation-email', activationEmailRouter.confirmOrderEmail)
 
 module.exports = router

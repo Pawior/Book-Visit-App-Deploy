@@ -5,6 +5,7 @@ const fs = require('fs')
 const path = require('path')
 
 const activationEmailT = require('../views/activationEmail')
+const confirmEmailT = require("../views/confirmEmail")
 const { Orders, Workers, Clients } = require('../initialize/firebase');
 
 // ---- token ----
@@ -28,7 +29,7 @@ const sendVerEmail = async (req, res) => {
     let mailOptions = {
         from: "Book Visit App",
         to: user.email,
-        subject: 'My first Email!',
+        subject: 'Activation Email',
         html: activationEmailT(token, user.email),
         attachments: [{
             filename: 'logo.png',
@@ -69,4 +70,26 @@ const activationFromEmail = (req, res) => {
     })
 }
 
-module.exports = { sendVerEmail, activationFromEmail }
+const confirmOrderEmail = async (req, res) => {
+    const snapshot = await Clients.get()
+    const list = snapshot.docs.map((doc) => doc.data())
+    const user = list.find((u) => req.body.email === u.email)
+
+    orderInfo = req.body
+    let mailOptions = {
+        from: "Book Visit App",
+        to: user.email,
+        subject: 'Order Confirmation',
+        html: confirmEmailT(orderInfo),
+
+    }
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            return console.log(err.message)
+        }
+        console.log('success in sending email')
+    })
+    res.send('sucess in sending email')
+}
+
+module.exports = { sendVerEmail, activationFromEmail, confirmOrderEmail }

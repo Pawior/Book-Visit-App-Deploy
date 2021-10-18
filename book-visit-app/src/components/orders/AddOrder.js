@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import "./AddOrder.css";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -20,6 +20,10 @@ const AddOrder = () => {
   const dateEl = useRef(null);
   const hourSelectEl = useRef(null);
   const descriptionEl = useRef(null);
+
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("user")))
+  }, [])
 
   const checkIfAllFieldsAreNotEmpty = () => {
     if (!newOrderTitle || !newOrderContent || !newOrderTime || !newOrderTime) {
@@ -49,6 +53,7 @@ const AddOrder = () => {
       seconds = seconds - 7200;
     } else {
       console.log("success");
+      sendConfirmationEmail()
       // ---- calculating time ----
       let hours = newOrderTime.substring(0, newOrderTime.indexOf(":"));
       let minutes = newOrderTime.substring(newOrderTime.indexOf(":") + 1);
@@ -74,8 +79,27 @@ const AddOrder = () => {
     }
   };
 
-  const buttonHandler = () => { };
-  if (user) {
+  // const buttonHandler = () => { };
+  const sendConfirmationEmail = async () => {
+    const body = {
+      email: user.email,
+      title: newOrderTitle,
+      description: newOrderContent,
+      date: newOrderDate,
+      clientId: user.id
+    };
+    const data = await fetch("http://localhost:5000/confirmation-email", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }).then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.log(err));
+  }
+  if (true) {
     return (
       <div>
         <Form className="m-2 addOrder mt-5">

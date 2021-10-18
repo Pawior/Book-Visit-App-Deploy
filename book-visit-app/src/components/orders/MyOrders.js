@@ -29,12 +29,15 @@ const MyOrders = (props) => {
     console.clear();
   }, []);
 
+
+
   const updateOrderWorker = async (user, orderId) => {
     const orderDoc = doc(db, "orders", orderId);
-    const newFields = { workerId: "" };
+    const newFields = { workerId: "", status: "pending" };
     await updateDoc(orderDoc, newFields);
     window.location.reload();
   };
+
   const rangePickerCallback = (start, end, label) => {
     console.log("start", start._d, "end", end, "label", label);
     const startDate = new Date(start._d);
