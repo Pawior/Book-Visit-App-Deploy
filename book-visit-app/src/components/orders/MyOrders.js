@@ -93,6 +93,7 @@ const MyOrders = (props) => {
         }
       }
     });
+    console.log("orderList:", orderList)
     return orderListLen ? (
       <div>
         <DateRangePicker
@@ -101,7 +102,14 @@ const MyOrders = (props) => {
         >
           <button>Click Me To Open Picker!</button>
         </DateRangePicker>
-        {orderList}
+        <div className="d-flex">
+          <div>{orderList.filter(t => t ? t.props.status === "pending" : null)}</div>
+          <div>{orderList.filter(t => t ? t.props.status === "in progress" : null)}</div>
+          <div>{orderList.filter(t => t ? t.props.status === "done" : null)}</div>
+        </div>
+
+
+
       </div>
     ) : (
       <div>
