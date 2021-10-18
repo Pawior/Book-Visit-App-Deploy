@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useHistory } from 'react-router-dom'
+import { UserContext } from "../../../contexts/UserContext";
 import Badge from 'react-bootstrap/Badge'
 
 const Order = (props) => {
+  const { user, setUser } = useContext(UserContext)
   const [fullDate, setFullDate] = useState("");
   const history = useHistory()
   const statusColors = ["orange", "royalblue", "green"]
@@ -68,15 +70,19 @@ const Order = (props) => {
           </Button>
 
         ) : (
-          <Button
-            variant="danger"
-            onClick={() => props.updateFunction(props.user, props.id)}
-          >
-            Decline
-          </Button>
+          <>
+
+            {user.userType == "worker" ? <Button
+              variant="danger"
+              onClick={() => props.updateFunction(props.user, props.id)}
+            >
+              Decline
+            </Button> : null}
+            <Button className="m-2" variant="info" onClick={() => redirectToOrderInfo(props)}>Order info</Button>
+          </>
 
         )}
-        <Button className="m-2" variant="info" onClick={() => redirectToOrderInfo(props)}>Order info</Button>
+        {/* <Button className="m-2" variant="info" onClick={() => redirectToOrderInfo(props)}>Order info</Button> */}
 
       </Card.Body>
     </Card >

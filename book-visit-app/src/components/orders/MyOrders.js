@@ -29,12 +29,15 @@ const MyOrders = (props) => {
     console.clear();
   }, []);
 
+
+
   const updateOrderWorker = async (user, orderId) => {
     const orderDoc = doc(db, "orders", orderId);
-    const newFields = { workerId: "" };
+    const newFields = { workerId: "", status: "pending" };
     await updateDoc(orderDoc, newFields);
     window.location.reload();
   };
+
   const rangePickerCallback = (start, end, label) => {
     console.log("start", start._d, "end", end, "label", label);
     const startDate = new Date(start._d);
@@ -90,6 +93,7 @@ const MyOrders = (props) => {
         }
       }
     });
+    console.log("orderList:", orderList)
     return orderListLen ? (
       <div>
         <DateRangePicker
@@ -98,7 +102,14 @@ const MyOrders = (props) => {
         >
           <button>Click Me To Open Picker!</button>
         </DateRangePicker>
-        {orderList}
+        <div className="d-flex">
+          <div>{orderList.filter(t => t ? t.props.status === "pending" : null)}</div>
+          <div>{orderList.filter(t => t ? t.props.status === "in progress" : null)}</div>
+          <div>{orderList.filter(t => t ? t.props.status === "done" : null)}</div>
+        </div>
+
+
+
       </div>
     ) : (
       <div>

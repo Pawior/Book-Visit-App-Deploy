@@ -5,6 +5,7 @@ import LoginContainer from "./auth/LoginContainter";
 import AddOrder from "./orders/AddOrder";
 import MyOrders from "./orders/MyOrders";
 import OrderDetail from './orders/OrderDetail'
+import UserOrders from "./orders/userOrders/UserOrders";
 import Page404 from './err/Page404'
 import Navbar from './layout/Navbar'
 import { UserContext } from "../contexts/UserContext";
@@ -22,6 +23,7 @@ function App() {
           <Route exact path="/" component={Home}></Route>
           <Route path="/login" component={LoginContainer}></Route>
           <Route path="/orders" component={Orders}></Route>
+          <Route path="/user-orders/:clientId" component={UserOrders}></Route>
           <Route path="/order/:orderId" component={OrderDetail}></Route>
           <Route path="/myorders/:workerId" component={MyOrders}></Route>
           <Route path="/addorder" component={AddOrder}></Route>

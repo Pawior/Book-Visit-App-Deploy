@@ -151,7 +151,8 @@ const TimeSelect = (props) => {
                 <option>240min</option>
                 <option>300min</option>d
             </select>
-
+            <br />
+            <br />
             <Button variant="primary" onClick={() => confirmOrderTime()}>Confirm time</Button>
             <Spinner style={{ display: "none" }} ref={spinnerRef} animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>

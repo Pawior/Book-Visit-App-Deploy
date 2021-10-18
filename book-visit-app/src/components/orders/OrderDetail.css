@@ -18,3 +18,8 @@ Container{
     font-size: 20px;
     line-height: 20px;
 }
+
+.card-beggin {
+    position: absolute;
+    left: -100px;
+}
