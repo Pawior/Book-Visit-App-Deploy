@@ -14,17 +14,48 @@ const OrderDetail = (props) => {
     const [status, setStatus] = useState("pending")
     const informations = props.history.location.state
     const statusColors = ["orange", "royalblue", "green"]
+    const [bgColor, setBgColor] = useState("")
     let statusColor;
 
-    if (informations.status === "pending") {
-        statusColor = statusColors[0]
-    } else if (informations.status === "in progress") {
-        statusColor = statusColors[1]
-    } else {
-        statusColor = statusColors[2]
-    }
-    // console.log(informations.status)
-    console.log(informations)
+    useEffect(async () => {
+        console.log("useEffect dziala", bgColor)
+        console.log(informations.status)
+        console.log(informations.status)
+        console.log(status)
+        if (status === "pending") {
+            setBgColor(statusColors[0])
+        } else if (status === "in progress") {
+            setBgColor(statusColors[1])
+        } else {
+            setBgColor(statusColors[2])
+            const body = {
+                email: user.email,
+                title: informations.title,
+                description: informations.content,
+                date: informations.date,
+                clientId: user.id
+            }
+            const data = await fetch(`${process.env.NODE_SERVER_IP}${process.env.EMAIL_DONE}`, {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            }).then((res) => res.json())
+                .then((json) => console.log(json))
+                .catch((err) => console.log(err));
+        }
+    }, [status])
+    // if (informations.status === "pending") {
+    //     statusColor = statusColors[0]
+    // } else if (informations.status === "in progress") {
+    //     statusColor = statusColors[1]
+    // } else {
+    //     statusColor = statusColors[2]
+    // }
+
+
     useEffect(async () => {
         const orderDocRef = await doc(db, "orders", informations.id)
         const orderSnap = await getDoc(orderDocRef)
@@ -34,7 +65,7 @@ const OrderDetail = (props) => {
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem("user")))
-        console.log(user)
+        // console.log(user)
     }, [])
 
     const orderDone = async () => {
@@ -62,7 +93,7 @@ const OrderDetail = (props) => {
                         <Card.Text > {informations.content}</Card.Text>
                         <Card.Body className="d-flex car">
 
-                            <Badge className="status-badge" bg="primary" style={{ position: 'absolute', top: '10px', right: '50px', backgroundColor: statusColor, width: "10rem", height: "2.5rem" }} >{status}</Badge>
+                            <Badge className="status-badge" bg="primary" style={{ position: 'absolute', top: '10px', right: '50px', backgroundColor: bgColor, width: "10rem", height: "2.5rem" }} >{status}</Badge>
                             {/* <Card.Title>Info Card Title</Card.Title> */}
                             {/* <Card.Text> */}
 

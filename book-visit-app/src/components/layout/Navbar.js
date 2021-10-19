@@ -6,10 +6,10 @@ import { UserContext } from '../../contexts/UserContext'
 const Navbar = () => {
     const { user, setUser } = useContext(UserContext)
     const history = useHistory()
-    console.log(user)
-    if (user) {
-        console.log(user)
-    }
+    // console.log(user)
+    // if (user) {
+    //     console.log(user)
+    // }
     let navContent
     if (user) {
         if (user.userType === "worker") {
@@ -51,7 +51,7 @@ const Navbar = () => {
         await setUser({})
         window.location.reload()
         history.push({ pathname: '/login' })
-        console.log(user)
+        // console.log(user)
     }
 
     return (
