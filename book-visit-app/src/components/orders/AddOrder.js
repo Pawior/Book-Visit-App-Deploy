@@ -5,8 +5,9 @@ import Button from "react-bootstrap/Button";
 import { Redirect } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 
-import { db } from "../../firebase";
+import { db, firebaseStorage } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { getStorage, ref, getMetadata, getDownloadURL, uploadBytes } from "firebase/storage"
 
 const AddOrder = () => {
   const { user, setUser } = useContext(UserContext);
@@ -16,14 +17,62 @@ const AddOrder = () => {
   const [newOrderDate, setNewOrderDate] = useState("");
   const [newOrderTime, setNewOrderTime] = useState("");
   const [iAmNotARobot, setIAmNotARobot] = useState(false);
+  const [url, setUrl] = useState("");
+  const [orderDir, setOrderDir] = useState(0)
+  const [images, setImages] = useState([])
+  const imageRef = useRef(null)
+  const imageUploadRef = useRef(null)
   const titleEl = useRef(null);
   const dateEl = useRef(null);
   const hourSelectEl = useRef(null);
   const descriptionEl = useRef(null);
 
+  const storage = getStorage()
+  // const storageRef = ref(storage, "images/serce.jpg")
+  // const starsRef = storageRef.child('images/');
+
+
+  // useEffect(() => {
+  //   const hearthRef = ref(storage, 'images/serce-grafika.jpg')
+  //   console.log(hearthRef)
+  //   console.log(hearthRef)
+  //   console.log(imageRef)
+  //   getDownloadURL(hearthRef).then((urlArg) => {
+  //     console.log(urlArg)
+  //     imageRef.current.src = urlArg
+  //   }).catch((err) => {
+  //     console.log(err)
+  //   })
+  // }, [])
+
+  useEffect(() => {
+    console.log(imageUploadRef)
+  }, [imageUploadRef.current])
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("user")))
   }, [])
+
+  const uploadImagesChange = async (e) => {
+    console.log(e.target.files)
+    setOrderDir(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 15) + Math.round(Math.random() * 10000));
+    console.log(orderDir)
+    for (let i = 0; i < e.target.files.length; i++) {
+      // setImages((prevState) => [...prevState, e.target.files[i]])
+      await setImages([...images, e.target.files[i]])
+    }
+    console.log(images)
+  }
+
+  const uploadImagesOnClick = () => {
+
+    images.forEach((image) => {
+      let storageImageRef = ref(storage, `images/${orderDir}/${image.name}`)
+      uploadBytes(storageImageRef, image).then((snapshot) => {
+        console.log("file uploaded!")
+      }).catch(err => console.log(err))
+
+    })
+  }
 
   const checkIfAllFieldsAreNotEmpty = () => {
     if (!newOrderTitle || !newOrderContent || !newOrderTime || !newOrderTime) {
@@ -66,7 +115,8 @@ const AddOrder = () => {
 
       // ---- adding time to the date value ----
       seconds = seconds + hours + minutes;
-
+      // ---- uploading images to database ----
+      await uploadImagesOnClick();
       // ---- sending new record to database ----
       await addDoc(ordersCollectionRef, {
         name: newOrderTitle,
@@ -75,9 +125,11 @@ const AddOrder = () => {
         status: "pending",
         clientId: user.id,
         workerId: "",
+        imagesId: orderDir
       });
     }
   };
+
 
   // const buttonHandler = () => { };
   const sendConfirmationEmail = async () => {
@@ -168,6 +220,8 @@ const AddOrder = () => {
           <Button variant="primary" onClick={createOrder}>
             Submit
           </Button>
+          {/* <img ref={imageRef}></img> */}
+          <input id="upload-photo" type="file" name="upload-file" multiple ref={imageUploadRef} onChange={uploadImagesChange} />
         </Form>
       </div>
     );

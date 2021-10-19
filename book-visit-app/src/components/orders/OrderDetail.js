@@ -5,9 +5,11 @@ import Badge from 'react-bootstrap/Badge'
 import "./OrderDetail.css"
 import TimeSelect from './elements/TimeSelect'
 import { UserContext } from '../../contexts/UserContext'
-import { db } from "../../firebase";
+import { db, firebaseStorage } from "../../firebase";
 import { getDoc, doc, updateDoc } from "firebase/firestore"
 import Button from "react-bootstrap/Button";
+
+import { getStorage, ref, getMetadata, getDownloadURL, uploadBytes, listAll } from "firebase/storage"
 
 const OrderDetail = (props) => {
     const { user, setUser } = useContext(UserContext)
@@ -15,13 +17,97 @@ const OrderDetail = (props) => {
     const informations = props.history.location.state
     const statusColors = ["orange", "royalblue", "green"]
     const [bgColor, setBgColor] = useState("")
+    const [imageId, setImageId] = useState("")
+    const [imageName, setImageName] = useState([])
+    const [urlArr, setUrlArr] = useState([])
     let statusColor;
 
+
+    const storage = getStorage()
+    // const storageRef = ref(storage, "images/serce.jpg")
+
+    useEffect(() => {
+        const orderImageRefAll = ref(storage, `images/${imageId}`)
+        listAll(orderImageRefAll).then(res => {
+            res.items.forEach(element => {
+                console.log(element.name)
+                setImageName([...imageName, element.name])
+            });
+            // console.log(res.items[0].name)
+        }).catch(err => {
+            console.log(err)
+        })
+        // console.log(orderImageRef.child(path: orderImageRef.name))
+        //console.log(child(orderImageRef.name))
+        console.log(imageName)
+        // console.log(imageRef)
+        let mappedImages = imageName.map((element) => {
+            console.log("mapped images ")
+            let orderImageRef = ref(storage, `images/${imageId}/${element}`)
+            getDownloadURL(orderImageRef).then((urlArg) => {
+                console.log(urlArg)
+                // imageRef.current.src = urlArg
+                return (
+                    <img src={urlArg} />
+                )
+            }).catch((err) => {
+                console.log(err)
+            })
+        })
+        console.log(mappedImages)
+        // img src={}
+    }, [imageId])
+
+
+    // const mappedImages = imageName.map((element) => {
+    //     console.log("mapped images ")
+    //     console.log(element)
+    //     let orderImageRef = ref(storage, `images/${imageId}/${element}`)
+    //     return (
+    //         <img src={urlArg} />
+    //     )
+    // })
+    let iterate = -1;
+    const mappedImages = urlArr.map((element) => {
+        console.log("mapped images ")
+        console.log(element)
+        let orderImageRef = ref(storage, `images/${imageId}/${element}`)
+        iterate++
+        return (
+            <img src={element} className="order-images" style={{ left: `${iterate * 150}px` }} />
+        )
+    })
+
+    useEffect(() => {
+        imageName.forEach((element) => {
+            let orderImageRef = ref(storage, `images/${imageId}/${element}`)
+            getDownloadURL(orderImageRef).then((urlArg) => {
+                console.log(urlArg)
+                // imageRef.current.src = urlArg
+                // setUrlArr([...urlArr, urlArg])
+                setUrlArr(urlArr => [urlArg, ...urlArr]);
+                // return (
+                //     <img src={urlArg} />
+                // )
+            }).catch((err) => {
+                console.log(err)
+            })
+
+        })
+        console.log(urlArr)
+    }, [imageName])
+
+    useEffect(() => {
+        console.log(urlArr)
+    }, [urlArr])
+
+    // console.log(mappedImages)
+
     useEffect(async () => {
-        console.log("useEffect dziala", bgColor)
-        console.log(informations.status)
-        console.log(informations.status)
-        console.log(status)
+        // console.log("useEffect dziala", bgColor)
+        // console.log(informations.status)
+        // console.log(informations.status)
+        // console.log(status)
         if (status === "pending") {
             setBgColor(statusColors[0])
         } else if (status === "in progress") {
@@ -61,6 +147,7 @@ const OrderDetail = (props) => {
         const orderSnap = await getDoc(orderDocRef)
         // console.log(orderSnap.data())
         setStatus(orderSnap.data().status)
+        setImageId(orderSnap.data().imagesId)
     }, [])
 
     useEffect(() => {
@@ -126,6 +213,7 @@ const OrderDetail = (props) => {
                             <h2>Description</h2>
                             
                         </Card.Text> */}
+                            {mappedImages ? mappedImages : null}
                         </Card.Body>
 
                     </Card>
