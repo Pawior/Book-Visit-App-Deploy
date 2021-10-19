@@ -92,7 +92,10 @@ const TimeSelect = (props) => {
                     console.log('można')
                     updateDocStatus();
                     setDoc(freeTimeDocRef, data, { merge: true })
-                    window.location.reload() // ---- refreshing page to get actual status ----
+                    setTimeout(function () {
+                        window.location.reload()  // ---- refreshing page to get actual status ----
+                    }, 500)
+
                 }
             });
 
