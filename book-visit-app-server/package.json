@@ -7,10 +7,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://pawior.github.io/Book-Visit-App-Deploy",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "cd book-visit-app && npm install && npm run build",
-    "start": "node index"
+    "start": "node index",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,7 @@
     "express": "^4.17.1",
     "firebase": "^8.0.0",
     "firebase-admin": "^9.12.0",
+    "gh-pages": "^3.2.3",
     "jsonwebtoken": "^8.5.1",
     "node-mandrill": "^1.0.1",
     "nodemailer": "^6.6.5",
