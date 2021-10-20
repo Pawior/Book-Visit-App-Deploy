@@ -6,7 +6,7 @@ const path = require("path");
 const dotenv = require("dotenv").config();
 
 // ---- basic app and port configuration ----
-const PORT = process.env.NODE_SERVER_PORT;
+const PORT = process.env.NODE_SERVER_PORT || 5000;
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(cors());
