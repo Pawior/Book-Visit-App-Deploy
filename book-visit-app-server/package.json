@@ -1,7 +1,8 @@
 {
   "name": "book-visit-app-server",
   "engines": {
-    "node": ">=14.0.0"
+    "node": "14.x",
+    "npm": "7.x"
   },
   "version": "1.0.0",
   "description": "",
