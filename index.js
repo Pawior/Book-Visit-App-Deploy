@@ -21,6 +21,9 @@ app.get("*", (req, res) => {
 const emailActRoutes = require("./routes/emailSendRoutes");
 app.use(emailActRoutes);
 
+console.log(process.env.NODE_SERVER_PORT);
+console.log(process.env.NODE_SERVER_IP);
+console.log(process.env.CLIENT_IP);
 // ---- listening ----
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
